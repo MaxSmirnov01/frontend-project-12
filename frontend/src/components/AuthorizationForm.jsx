@@ -1,15 +1,21 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
-import React, { useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import axios from 'axios';
+import useAuth from '../hooks';
 
 const schema = Yup.object().shape({
-  username: Yup.string().required('Ник обязателен'),
-  password: Yup.string().required('Пароль обязателен'),
+  username: Yup.string().required(),
+  password: Yup.string().required(),
 });
 
 const AuthorizationForm = () => {
+  const [authFailed, setAuthFailed] = useState(false);
   const input = useRef(null);
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => input.current.focus(), []);
 
@@ -19,8 +25,20 @@ const AuthorizationForm = () => {
       password: '',
     },
     validationSchema: schema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async ({ username, password }) => {
+      formik.setSubmitting(true);
+      setAuthFailed(false);
+      try {
+        const response = await axios.post('/api/v1/login', { username, password });
+        const { token } = response.data;
+        localStorage.setItem('userToken', token);
+        auth.logIn();
+        navigate('/');
+      } catch (e) {
+        formik.setSubmitting(false);
+        setAuthFailed(true);
+        throw e;
+      }
     },
   });
 
@@ -44,11 +62,10 @@ const AuthorizationForm = () => {
                     id="username"
                     onChange={formik.handleChange}
                     value={formik.values.username}
-                    isInvalid={!!formik.errors.username}
+                    isInvalid={authFailed}
                     ref={input}
                   />
                   <Form.Label htmlFor="username">Ваш ник</Form.Label>
-                  <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
@@ -60,10 +77,12 @@ const AuthorizationForm = () => {
                     id="password"
                     onChange={formik.handleChange}
                     value={formik.values.password}
-                    isInvalid={!!formik.errors.password}
+                    isInvalid={authFailed}
                   />
                   <Form.Label htmlFor="password">Пароль</Form.Label>
-                  <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid" tooltip>
+                    Неверные имя пользователя или пароль
+                  </Form.Control.Feedback>
                 </Form.Floating>
                 <Button type="submit" className="mb-3 w-100" variant="outline-primary">
                   Войти
@@ -73,7 +92,7 @@ const AuthorizationForm = () => {
             <Card.Footer className="p-4">
               <div className="text-center">
                 <span>Нет аккаунта? </span>
-                <a href="/signap">Регистрация</a>
+                <Link to="/signap">Регистрация</Link>
               </div>
             </Card.Footer>
           </Card>

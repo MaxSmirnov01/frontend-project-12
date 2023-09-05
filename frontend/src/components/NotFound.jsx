@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => (
   <div className="text-center">
@@ -6,7 +7,7 @@ const NotFound = () => (
     <h1 className="h4 text-muted">Страница не найдена</h1>
     <p className="text-muted">
       Но вы можете перейтиㅤ
-      <a href="/">на главную страницу</a>
+      <Link to="/">на главную страницу</Link>
     </p>
   </div>
 );
