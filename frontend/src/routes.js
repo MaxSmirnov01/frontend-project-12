@@ -1,5 +1,5 @@
 export default {
-  chatPath: () => '/',
+  mainPath: () => '/',
   loginPath: () => '/login',
   notFoundPath: () => '*',
 };

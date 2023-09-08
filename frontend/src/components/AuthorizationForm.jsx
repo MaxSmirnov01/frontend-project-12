@@ -4,7 +4,8 @@ import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
-import useAuth from '../hooks';
+import useAuth from '../hooks/useAuth';
+import routes from '../routes';
 
 const schema = Yup.object().shape({
   username: Yup.string().required(),
@@ -33,7 +34,7 @@ const AuthorizationForm = () => {
         const { token } = response.data;
         localStorage.setItem('userToken', token);
         auth.logIn();
-        navigate('/');
+        navigate(routes.mainPath());
       } catch (e) {
         formik.setSubmitting(false);
         setAuthFailed(true);
