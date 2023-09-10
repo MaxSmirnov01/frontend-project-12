@@ -1,15 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import cn from 'classnames';
+import { io } from 'socket.io-client';
+import { addMessage } from '../slices/messagesSlice.js';
+
+const socket = io();
+
+socket.on('connect', () => {
+  console.log('Подключено к серверу');
+});
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const dispatch = useDispatch();
+  const { username } = JSON.parse(localStorage.getItem('user'));
   const input = useRef(null);
-  useEffect(() => input.current.focus());
 
   const messages = useSelector((state) => state.messages.messages);
+  const channelId = useSelector((state) => state.channels.currentChannelId);
+
+  useEffect(() => input.current.focus());
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      dispatch(addMessage(message));
+    });
+  }, [dispatch]);
 
   const handleCustomChange = (e) => {
     const { value } = e.target;
@@ -25,8 +43,17 @@ const Messages = () => {
     initialValues: {
       body: '',
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: ({ body }) => {
+      formik.setSubmitting(true);
+      try {
+        socket.emit('newMessage', { body, channelId, username }, (response) => {
+          console.log(response.status);
+        });
+        formik.resetForm();
+      } catch (error) {
+        formik.setSubmitting(false);
+        console.log(error);
+      }
     },
   });
 
@@ -37,13 +64,13 @@ const Messages = () => {
           <p className="m-0">
             <b># general</b>
           </p>
-          <span className="text-muted">0 сообщений</span>
+          <span className="text-muted">{`${messages.length} сообщений`}</span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
           {messages.map((message) => (
-            <div className="text-break mb-2">
-              <b>admin</b>
-              {message}
+            <div key={message.id} className="text-break mb-2">
+              <b>{username}</b>
+              {`: ${message.body}`}
             </div>
           ))}
         </div>

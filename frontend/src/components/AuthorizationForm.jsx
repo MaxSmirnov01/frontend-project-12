@@ -31,8 +31,8 @@ const AuthorizationForm = () => {
       setAuthFailed(false);
       try {
         const response = await axios.post('/api/v1/login', { username, password });
-        const { token } = response.data;
-        localStorage.setItem('userToken', token);
+        const user = response.data;
+        localStorage.setItem('user', JSON.stringify(user));
         auth.logIn();
         navigate(routes.mainPath());
       } catch (e) {

@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import cn from 'classnames';
 
 const Channels = () => {
-  const [currentChannelId, setCurrentChannelId] = useState(1);
   const channels = useSelector((state) => state.channels.channels);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+
+  const [channelId, setChannelId] = useState(currentChannelId);
 
   const handleClick = (id) => {
-    setCurrentChannelId(id);
+    setChannelId(id);
   };
 
   return (
@@ -28,7 +30,7 @@ const Channels = () => {
             <button
               onClick={() => handleClick(channel.id)}
               type="button"
-              className={cn('w-100 rounded-0 text-start btn', { 'btn-secondary': currentChannelId === channel.id })}
+              className={cn('w-100 rounded-0 text-start btn', { 'btn-secondary': channelId === channel.id })}
             >
               <span className="me-1">#</span>
               {channel.name}

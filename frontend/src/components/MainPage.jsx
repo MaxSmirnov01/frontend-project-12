@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { addChannel } from '../slices/channelsSlice.js';
-import { addMessage } from '../slices/messagesSlice.js';
+import { addChannelState } from '../slices/channelsSlice.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
 
@@ -10,15 +9,17 @@ const MainPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const request = async () => {
-      const token = localStorage.getItem('userToken');
-      const response = await axios.get('/api/v1/data', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // console.log(response.data);
-      dispatch(addChannel(response.data.channels));
-      dispatch(addMessage(response.data.messages));
+      const user = JSON.parse(localStorage.getItem('user'));
+      try {
+        const response = await axios.get('/api/v1/data', {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        dispatch(addChannelState(response.data));
+      } catch (error) {
+        console.log(error);
+      }
     };
     request();
   }, [dispatch]);

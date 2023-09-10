@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
-    localStorage.removeItem('userToken');
+    localStorage.removeItem('user');
     setLoggedIn(false);
   };
 
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
 
 const PrivateRoute = () => {
   // const auth = useAuth();
-  if (localStorage.getItem('userToken')) {
+  if (localStorage.getItem('user')) {
     // return auth.loggedIn ? <MainPage /> : <Navigate to={routes.loginPath()} />;
     return <MainPage />;
   }
