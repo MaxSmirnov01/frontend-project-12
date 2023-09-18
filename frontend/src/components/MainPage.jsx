@@ -1,28 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { addChannelState } from '../slices/channelsSlice.js';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
+import getModal from './Modal.jsx';
 
 const MainPage = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const request = async () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      try {
-        const response = await axios.get('/api/v1/data', {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-        dispatch(addChannelState(response.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    request();
-  }, [dispatch]);
+  const { type, modalIsOpen } = useSelector((state) => state.modal);
+  const Modal = getModal(type);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -30,6 +14,7 @@ const MainPage = () => {
         <Channels />
         <Messages />
       </div>
+      {modalIsOpen && <Modal />}
     </div>
   );
 };

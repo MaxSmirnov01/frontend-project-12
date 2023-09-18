@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-// eslint-disable-next-line object-curly-newline
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavbarComponent from './Navbar';
 import AuthorizationForm from './AuthorizationForm';
@@ -7,7 +6,7 @@ import routes from '../routes';
 // import useAuth from '../hooks';
 import MainPage from './MainPage';
 import NotFound from './NotFound';
-import AuthContext from '../contexts';
+import { AuthContext } from '../contexts';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);

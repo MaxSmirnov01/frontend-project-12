@@ -1,33 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import cn from 'classnames';
-import { io } from 'socket.io-client';
-import { addMessage } from '../slices/messagesSlice.js';
-
-const socket = io();
-
-socket.on('connect', () => {
-  console.log('Подключено к серверу');
-});
+import useSocket from '../hooks/useSocket';
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const dispatch = useDispatch();
+
   const { username } = JSON.parse(localStorage.getItem('user'));
   const input = useRef(null);
+  const socket = useSocket();
 
   const messages = useSelector((state) => state.messages.messages);
   const channelId = useSelector((state) => state.channels.currentChannelId);
+  // console.log(messages, 'сообщения', channelId, 'айди');
+
+  // const channelName = useSelector((state) => {
+  //   const { channels } = state.channels;
+  //   console.log(channels, 'из компонента сообщений', channelId);
+  //   return channels.find((channel) => channel.id === channelId);
+  // });
+  // console.log(channelName, 'name');
+
+  const messagesFilteredById = messages.filter((message) => message.channelId === channelId);
 
   useEffect(() => input.current.focus());
-
-  useEffect(() => {
-    socket.on('newMessage', (message) => {
-      dispatch(addMessage(message));
-    });
-  }, [dispatch]);
 
   const handleCustomChange = (e) => {
     const { value } = e.target;
@@ -47,7 +45,7 @@ const Messages = () => {
       formik.setSubmitting(true);
       try {
         socket.emit('newMessage', { body, channelId, username }, (response) => {
-          console.log(response.status);
+          console.log(response.status, 'сообщение добавлено');
         });
         formik.resetForm();
       } catch (error) {
@@ -62,12 +60,12 @@ const Messages = () => {
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
           <p className="m-0">
-            <b># general</b>
+            <b>{`# `}</b>
           </p>
-          <span className="text-muted">{`${messages.length} сообщений`}</span>
+          <span className="text-muted">0 сообщений</span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
-          {messages.map((message) => (
+          {messagesFilteredById.map((message) => (
             <div key={message.id} className="text-break mb-2">
               <b>{username}</b>
               {`: ${message.body}`}
