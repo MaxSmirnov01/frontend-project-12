@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { hideModal } from '../slices/modalSlice';
 import { setCurrentChannel, selectChannelNames } from '../slices/channelsSlice';
@@ -11,6 +12,7 @@ const AddModal = () => {
   const dispatch = useDispatch();
   const input = useRef(null);
   const socket = useSocket();
+  const { t } = useTranslation();
 
   const modalIsOpen = useSelector((state) => state.modal.modalIsOpen);
   const channelNames = useSelector(selectChannelNames);
@@ -21,9 +23,9 @@ const AddModal = () => {
 
   const schema = Yup.object().shape({
     name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .test('is-unique', 'Должно быть уникальным', (value) => !channelNames.includes(value)),
+      .min(3, `${t('ValidationErrors.addModal.name')}`)
+      .max(20, `${t('ValidationErrors.addModal.name')}`)
+      .notOneOf(channelNames, `${t('ValidationErrors.addModal.unique')}`),
   });
 
   const formik = useFormik({
@@ -50,7 +52,7 @@ const AddModal = () => {
   return (
     <Modal show={modalIsOpen} centered onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('Modals.addModal.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -70,10 +72,10 @@ const AddModal = () => {
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" className="me-2" onClick={handleClose}>
-                Отменить
+                {t('Modals.addModal.cancel')}
               </Button>
               <Button type="submit" variant="primary">
-                Отправить
+                {t('Modals.addModal.submit')}
               </Button>
             </div>
           </Form.Group>
@@ -86,6 +88,7 @@ const AddModal = () => {
 const RemoveModal = () => {
   const dispatch = useDispatch();
   const socket = useSocket();
+  const { t } = useTranslation();
 
   const { modalIsOpen, channelId } = useSelector((state) => state.modal);
 
@@ -94,13 +97,13 @@ const RemoveModal = () => {
   return (
     <Modal show={modalIsOpen} centered onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('Modals.removeModal.removeChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className="lead">Уверены?</p>
+        <p className="lead">{t('Modals.removeModal.areYouSure')}</p>
         <div className="d-flex justify-content-end">
           <Button variant="secondary" className="me-2" onClick={handleClose}>
-            Отменить
+            {t('Modals.removeModal.cancel')}
           </Button>
           <Button
             variant="danger"
@@ -111,7 +114,7 @@ const RemoveModal = () => {
               })
             }
           >
-            Удалить
+            {t('Modals.removeModal.remove')}
           </Button>
         </div>
       </Modal.Body>
@@ -123,6 +126,7 @@ const RenameModal = () => {
   const dispatch = useDispatch();
   const socket = useSocket();
   const input = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => input.current.select(), []);
 
@@ -133,9 +137,9 @@ const RenameModal = () => {
 
   const schema = Yup.object().shape({
     name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .test('is-unique', 'Должно быть уникальным', (value) => !channelNames.includes(value)),
+      .min(3, `${t('ValidationErrors.renameModal.name')}`)
+      .max(20, `${t('ValidationErrors.renameModal.name')}`)
+      .notOneOf(channelNames, `${t('ValidationErrors.renameModal.unique')}`),
   });
 
   const formik = useFormik({
@@ -160,7 +164,7 @@ const RenameModal = () => {
   return (
     <Modal show={modalIsOpen} centered onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('Modals.renameModal.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -180,10 +184,10 @@ const RenameModal = () => {
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" className="me-2" onClick={handleClose}>
-                Отменить
+                {t('Modals.renameModal.cancel')}
               </Button>
               <Button type="submit" variant="primary">
-                Отправить
+                {t('Modals.renameModal.submit')}
               </Button>
             </div>
           </Form.Group>

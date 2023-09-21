@@ -1,15 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavbarComponent from './Navbar';
 import AuthorizationForm from './AuthorizationForm';
 import routes from '../routes';
-// import useAuth from '../hooks';
 import MainPage from './MainPage';
 import NotFound from './NotFound';
+import Signup from './Signup';
 import { AuthContext } from '../contexts';
 
 const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const user = localStorage.getItem('user');
+  const [loggedIn, setLoggedIn] = useState(!!user);
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -25,12 +26,10 @@ const AuthProvider = ({ children }) => {
 };
 
 const PrivateRoute = () => {
-  // const auth = useAuth();
   if (localStorage.getItem('user')) {
-    // return auth.loggedIn ? <MainPage /> : <Navigate to={routes.loginPath()} />;
     return <MainPage />;
   }
-  return <AuthorizationForm />;
+  return <Navigate to={routes.loginPath()} />;
 };
 
 const App = () => (
@@ -42,6 +41,7 @@ const App = () => (
           <Route path={routes.mainPath()} element={<PrivateRoute />} />
           <Route path={routes.loginPath()} element={<AuthorizationForm />} />
           <Route path={routes.notFoundPath()} element={<NotFound />} />
+          <Route path={routes.signupPath()} element={<Signup />} />
         </Routes>
       </Router>
     </AuthProvider>

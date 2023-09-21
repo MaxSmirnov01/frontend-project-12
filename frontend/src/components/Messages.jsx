@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import cn from 'classnames';
 import useSocket from '../hooks/useSocket';
@@ -11,17 +12,15 @@ const Messages = () => {
   const { username } = JSON.parse(localStorage.getItem('user'));
   const input = useRef(null);
   const socket = useSocket();
+  const { t } = useTranslation();
 
   const messages = useSelector((state) => state.messages.messages);
   const channelId = useSelector((state) => state.channels.currentChannelId);
-  // console.log(messages, 'сообщения', channelId, 'айди');
 
-  // const channelName = useSelector((state) => {
-  //   const { channels } = state.channels;
-  //   console.log(channels, 'из компонента сообщений', channelId);
-  //   return channels.find((channel) => channel.id === channelId);
-  // });
-  // console.log(channelName, 'name');
+  const channelName = useSelector((state) => {
+    const { channels } = state.channels;
+    return channels.find((channel) => channel.id === channelId);
+  });
 
   const messagesFilteredById = messages.filter((message) => message.channelId === channelId);
 
@@ -29,8 +28,7 @@ const Messages = () => {
 
   const handleCustomChange = (e) => {
     const { value } = e.target;
-
-    if (value.length > 0) {
+    if (value) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
@@ -48,6 +46,7 @@ const Messages = () => {
           console.log(response.status, 'сообщение добавлено');
         });
         formik.resetForm();
+        setIsButtonDisabled(true);
       } catch (error) {
         formik.setSubmitting(false);
         console.log(error);
@@ -60,14 +59,14 @@ const Messages = () => {
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
           <p className="m-0">
-            <b>{`# `}</b>
+            <b>{channelName && `# ${channelName.name}`}</b>
           </p>
-          <span className="text-muted">0 сообщений</span>
+          <span className="text-muted">{t('Messages.count', { count: messagesFilteredById.length })}</span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5">
           {messagesFilteredById.map((message) => (
             <div key={message.id} className="text-break mb-2">
-              <b>{username}</b>
+              <b>{message.username}</b>
               {`: ${message.body}`}
             </div>
           ))}
@@ -96,7 +95,7 @@ const Messages = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                   <path fillRule="evenodd" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
                 </svg>
-                <span className="visually-hidden">Отправить</span>
+                <span className="visually-hidden">{t('Messages.submit')}</span>
               </Button>
             </InputGroup>
           </Form>

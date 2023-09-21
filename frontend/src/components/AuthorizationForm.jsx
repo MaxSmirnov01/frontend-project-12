@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
@@ -17,6 +18,7 @@ const AuthorizationForm = () => {
   const input = useRef(null);
   const auth = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => input.current.focus(), []);
 
@@ -35,10 +37,10 @@ const AuthorizationForm = () => {
         localStorage.setItem('user', JSON.stringify(user));
         auth.logIn();
         navigate(routes.mainPath());
-      } catch (e) {
+      } catch (error) {
         formik.setSubmitting(false);
         setAuthFailed(true);
-        throw e;
+        throw error;
       }
     },
   });
@@ -53,7 +55,7 @@ const AuthorizationForm = () => {
                 <img src="images/avatar.jpg" className="rounded-circle" alt="Войти" />
               </div>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
-                <h1 className="text-center mb-4">Войти</h1>
+                <h1 className="text-center mb-4">{t('AuthorizationForm.logIn')}</h1>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="username"
@@ -66,7 +68,7 @@ const AuthorizationForm = () => {
                     isInvalid={authFailed}
                     ref={input}
                   />
-                  <Form.Label htmlFor="username">Ваш ник</Form.Label>
+                  <Form.Label htmlFor="username">{t('AuthorizationForm.username')}</Form.Label>
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
@@ -80,20 +82,20 @@ const AuthorizationForm = () => {
                     value={formik.values.password}
                     isInvalid={authFailed}
                   />
-                  <Form.Label htmlFor="password">Пароль</Form.Label>
+                  <Form.Label htmlFor="password">{t('AuthorizationForm.password')}</Form.Label>
                   <Form.Control.Feedback type="invalid" tooltip>
-                    Неверные имя пользователя или пароль
+                    {t('ValidationErrors.authorizationForm.error')}
                   </Form.Control.Feedback>
                 </Form.Floating>
                 <Button type="submit" className="mb-3 w-100" variant="outline-primary">
-                  Войти
+                  {t('AuthorizationForm.buttonLogIn')}
                 </Button>
               </Form>
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>Нет аккаунта? </span>
-                <Link to="/signap">Регистрация</Link>
+                <span>{t('AuthorizationForm.noAccount')} </span>
+                <Link to={routes.signupPath()}>{t('AuthorizationForm.signUp')}</Link>
               </div>
             </Card.Footer>
           </Card>
