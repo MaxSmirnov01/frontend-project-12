@@ -51,13 +51,14 @@ const Signup = () => {
         navigate(routes.mainPath());
       } catch (error) {
         formik.setSubmitting(false);
-        toast.error(`${t('PopUpAlerts.signUp')}`, {
-          icon: '🆘',
-        });
         if (error.response.status === 409) {
           setRegFailed(true);
           input.current.select();
+          return;
         }
+        toast.error(`${t('PopUpAlerts.signUp')}`, {
+          icon: '🆘',
+        });
         throw error;
       }
     },

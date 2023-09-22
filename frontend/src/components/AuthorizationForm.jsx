@@ -40,7 +40,10 @@ const AuthorizationForm = () => {
         navigate(routes.mainPath());
       } catch (error) {
         formik.setSubmitting(false);
-        setAuthFailed(true);
+        if (error.response.status === 401) {
+          setAuthFailed(true);
+          return;
+        }
         toast.error(`${t('PopUpAlerts.authorizationForm')}`, {
           icon: '🆘',
         });
