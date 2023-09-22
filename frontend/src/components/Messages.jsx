@@ -4,13 +4,8 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import cn from 'classnames';
-import leoProfanity from 'leo-profanity';
 import useSocket from '../hooks/useSocket';
-
-const filter = leoProfanity;
-filter.add(filter.getDictionary('ru'));
-filter.add(filter.getDictionary('en'));
-const filterList = filter.list();
+import filterProfanity from '../filter';
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -38,15 +33,8 @@ const Messages = () => {
     },
     onSubmit: ({ body }) => {
       formik.setSubmitting(true);
-      let message;
-      if (filterList.includes(body)) {
-        message = body
-          .split('')
-          .map(() => '*')
-          .join('');
-      } else {
-        message = body;
-      }
+      const message = filterProfanity(body);
+
       try {
         socket.emit('newMessage', { body: message, channelId, username }, (response) => {
           console.log(response.status, 'сообщение добавлено');
