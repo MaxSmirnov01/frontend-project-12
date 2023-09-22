@@ -77,7 +77,7 @@ const Messages = () => {
               <Form.Control
                 name="body"
                 aria-label="Новое сообщение"
-                placeholder="Введите сообщение..."
+                placeholder={t('Messages.enterMessage')}
                 className="border-0 p-2 ps-2"
                 ref={input}
                 onChange={(e) => {

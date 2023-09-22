@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { hideModal } from '../slices/modalSlice';
 import { setCurrentChannel, selectChannelNames } from '../slices/channelsSlice';
@@ -41,6 +42,9 @@ const AddModal = () => {
           console.log(status, 'канал добавлен');
           dispatch(setCurrentChannel({ currentChannelId: data.id }));
           handleClose();
+          toast.success(`${t('PopUpAlerts.modal.addChannel')}`, {
+            icon: '👌',
+          });
         });
       } catch (error) {
         formik.setSubmitting(false);
@@ -111,6 +115,9 @@ const RemoveModal = () => {
               socket.emit('removeChannel', { id: channelId }, (response) => {
                 console.log(response.status, 'канал удален');
                 handleClose();
+                toast.success(`${t('PopUpAlerts.modal.removeChannel')}`, {
+                  icon: '👌',
+                });
               })
             }
           >
@@ -153,6 +160,9 @@ const RenameModal = () => {
         socket.emit('renameChannel', { id: channelId, name, removable: true }, (response) => {
           console.log(response.status, 'канал переименован');
           handleClose();
+          toast.success(`${t('PopUpAlerts.modal.renameChannel')}`, {
+            icon: '👌',
+          });
         });
       } catch (error) {
         formik.setSubmitting(false);

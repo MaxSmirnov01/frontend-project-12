@@ -3,6 +3,7 @@ import { Card, Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
@@ -40,6 +41,9 @@ const AuthorizationForm = () => {
       } catch (error) {
         formik.setSubmitting(false);
         setAuthFailed(true);
+        toast.error(`${t('PopUpAlerts.authorizationForm')}`, {
+          icon: '🆘',
+        });
         throw error;
       }
     },

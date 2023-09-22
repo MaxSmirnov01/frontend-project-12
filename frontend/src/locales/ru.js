@@ -37,6 +37,7 @@ const ru = {
       count_one: '{{count}} сообщение',
       count_few: '{{count}} сообщения',
       count_many: '{{count}} сообщений',
+      enterMessage: 'Введите сообщение...',
       submit: 'Отправить',
     },
     Modals: {
@@ -75,6 +76,16 @@ const ru = {
         name: 'От 3 до 20 символов',
         unique: 'Должно быть уникальным',
       },
+    },
+    PopUpAlerts: {
+      mainPage: 'Сервер не отвечает',
+      modal: {
+        addChannel: 'Канал создан',
+        removeChannel: 'Канал удалён',
+        renameChannel: 'Канал переименован',
+      },
+      authorizationForm: 'Ошибка соединения',
+      signUp: 'Ошибка соединения',
     },
   },
 };

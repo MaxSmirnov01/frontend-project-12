@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -50,6 +51,9 @@ const Signup = () => {
         navigate(routes.mainPath());
       } catch (error) {
         formik.setSubmitting(false);
+        toast.error(`${t('PopUpAlerts.signUp')}`, {
+          icon: '🆘',
+        });
         if (error.response.status === 409) {
           setRegFailed(true);
           input.current.select();

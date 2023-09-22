@@ -35,6 +35,7 @@ const en = {
     Messages: {
       count_one: '{{count}} message',
       count_other: '{{count}} messages',
+      enterMessage: 'Enter a message...',
       submit: 'Submit',
     },
     Modals: {
@@ -73,6 +74,16 @@ const en = {
         name: 'From 3 to 20 characters',
         unique: 'Must be unique',
       },
+    },
+    PopUpAlerts: {
+      mainPage: 'The server is not responding',
+      modal: {
+        addChannel: 'Channel created',
+        removeChannel: 'Channel removed',
+        renameChannel: 'Channel renamed',
+      },
+      authorizationForm: 'Connection error',
+      signUp: 'Connection error',
     },
   },
 };
