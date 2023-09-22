@@ -5,9 +5,15 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import leoProfanity from 'leo-profanity';
 import { hideModal } from '../slices/modalSlice';
 import { setCurrentChannel, selectChannelNames } from '../slices/channelsSlice';
 import useSocket from '../hooks/useSocket';
+
+const filter = leoProfanity;
+filter.add(filter.getDictionary('ru'));
+filter.add(filter.getDictionary('en'));
+const filterList = filter.list();
 
 const AddModal = () => {
   const dispatch = useDispatch();
@@ -36,8 +42,17 @@ const AddModal = () => {
     validationSchema: schema,
     onSubmit: ({ name }) => {
       formik.setSubmitting(true);
+      let newChannel;
+      if (filterList.includes(name)) {
+        newChannel = name
+          .split('')
+          .map(() => '*')
+          .join('');
+      } else {
+        newChannel = name;
+      }
       try {
-        socket.emit('newChannel', { name }, (response) => {
+        socket.emit('newChannel', { name: newChannel }, (response) => {
           const { data, status } = response;
           console.log(status, 'канал добавлен');
           dispatch(setCurrentChannel({ currentChannelId: data.id }));
@@ -156,8 +171,17 @@ const RenameModal = () => {
     validationSchema: schema,
     onSubmit: ({ name }) => {
       formik.setSubmitting(true);
+      let renameChannel;
+      if (filterList.includes(name)) {
+        renameChannel = name
+          .split('')
+          .map(() => '*')
+          .join('');
+      } else {
+        renameChannel = name;
+      }
       try {
-        socket.emit('renameChannel', { id: channelId, name, removable: true }, (response) => {
+        socket.emit('renameChannel', { id: channelId, name: renameChannel }, (response) => {
           console.log(response.status, 'канал переименован');
           handleClose();
           toast.success(`${t('PopUpAlerts.modal.renameChannel')}`, {

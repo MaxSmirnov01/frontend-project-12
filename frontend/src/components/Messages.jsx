@@ -4,7 +4,13 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import cn from 'classnames';
+import leoProfanity from 'leo-profanity';
 import useSocket from '../hooks/useSocket';
+
+const filter = leoProfanity;
+filter.add(filter.getDictionary('ru'));
+filter.add(filter.getDictionary('en'));
+const filterList = filter.list();
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -26,23 +32,23 @@ const Messages = () => {
 
   useEffect(() => input.current.focus());
 
-  const handleCustomChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      setIsButtonDisabled(false);
-    } else {
-      setIsButtonDisabled(true);
-    }
-  };
-
   const formik = useFormik({
     initialValues: {
       body: '',
     },
     onSubmit: ({ body }) => {
       formik.setSubmitting(true);
+      let message;
+      if (filterList.includes(body)) {
+        message = body
+          .split('')
+          .map(() => '*')
+          .join('');
+      } else {
+        message = body;
+      }
       try {
-        socket.emit('newMessage', { body, channelId, username }, (response) => {
+        socket.emit('newMessage', { body: message, channelId, username }, (response) => {
           console.log(response.status, 'сообщение добавлено');
         });
         formik.resetForm();
@@ -53,6 +59,15 @@ const Messages = () => {
       }
     },
   });
+
+  const handleCustomChange = (e) => {
+    const { value } = e.target;
+    if (value) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  };
 
   return (
     <div className="col p-0 h-100">
