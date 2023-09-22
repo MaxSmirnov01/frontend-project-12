@@ -40,11 +40,6 @@ const PrivateRoute = () => {
   return <Navigate to={routes.loginPath()} />;
 };
 
-// const TestError = () => {
-//   const a = null;
-//   return a.hello();
-// };
-
 const App = () => (
   <Provider config={rollbarConfig}>
     <ErrorBoundary>
