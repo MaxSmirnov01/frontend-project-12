@@ -1,8 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import cn from 'classnames';
 import { setCurrentChannel } from '../slices/channelsSlice';
 import { showModal } from '../slices/modalSlice';
 
@@ -30,44 +29,43 @@ const Channels = () => {
 
   const addDefaultChannels = (channel) => (
     <li key={channel.id} className="nav-item w-100">
-      <button
+      <Button
         onClick={() => handleSelectChannel(channel.id)}
         type="button"
-        className={cn('w-100 rounded-0 text-start btn', {
-          'btn-secondary': currentChannelId === channel.id,
-        })}
+        className="w-100 rounded-0 text-start btn"
+        variant={currentChannelId === channel.id ? 'secondary' : null}
       >
         <span className="me-1">#</span>
         {channel.name}
-      </button>
+      </Button>
     </li>
   );
 
   const addNewChannels = (channel) => (
     <li key={channel.id} className="nav-item w-100">
-      <ButtonGroup className="d-flex">
-        <button
+      <Dropdown as={ButtonGroup} className="d-flex">
+        <Button
           onClick={() => handleSelectChannel(channel.id)}
           type="button"
-          className={cn('w-100 rounded-0 text-start btn text-truncate', {
-            'btn-secondary': currentChannelId === channel.id,
-          })}
+          className="w-100 rounded-0 text-start btn text-truncate"
+          variant={currentChannelId === channel.id ? 'secondary' : null}
         >
           <span className="me-1">#</span>
           {channel.name}
-        </button>
-        <DropdownButton
-          as={ButtonGroup}
-          title=""
-          id="bg-nested-dropdown"
-          variant={currentChannelId === channel.id ? 'secondary' : null}
+        </Button>
+        <Dropdown.Toggle
+          split
+          id="dropdown-split-basic"
           className="flex-grow-0"
+          variant={currentChannelId === channel.id ? 'secondary' : null}
         >
           <span className="visually-hidden">{t('Channels.channelControl')}</span>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
           <Dropdown.Item onClick={() => handleRemoveChannel(channel.id)}>{t('Channels.removeChannel')}</Dropdown.Item>
           <Dropdown.Item onClick={() => handleRenameChannel(channel.id)}>{t('Channels.renameChannel')}</Dropdown.Item>
-        </DropdownButton>
-      </ButtonGroup>
+        </Dropdown.Menu>
+      </Dropdown>
     </li>
   );
 

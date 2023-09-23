@@ -1,9 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
+export const defaultChannel = 1;
+
 const channelsSlice = createSlice({
   name: 'channels',
-  initialState: { channels: [], currentChannelId: 1 },
+  initialState: { channels: [], currentChannelId: defaultChannel },
   reducers: {
     addChannelState: (state, { payload }) => {
       const { channels, currentChannelId } = payload;
