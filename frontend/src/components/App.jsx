@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+// eslint-disable-next-line object-curly-newline
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider, ErrorBoundary } from '@rollbar/react';
 import { ToastContainer } from 'react-toastify';

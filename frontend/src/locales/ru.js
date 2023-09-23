@@ -5,7 +5,7 @@ const ru = {
       username: 'Ваш ник',
       password: 'Пароль',
       buttonLogIn: 'Войти',
-      noAccount: 'Нет аккаунта?',
+      noAccount: 'Нет аккаунта? ',
       signUp: 'Регистрация',
     },
     Signup: {

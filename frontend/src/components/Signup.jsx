@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';

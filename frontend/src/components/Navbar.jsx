@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line object-curly-newline
 import { Navbar, Container, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

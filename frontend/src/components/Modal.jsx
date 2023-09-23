@@ -114,15 +114,15 @@ const RemoveModal = () => {
           </Button>
           <Button
             variant="danger"
-            onClick={() =>
+            onClick={() => {
               socket.emit('removeChannel', { id: channelId }, (response) => {
                 console.log(response.status, 'канал удален');
                 handleClose();
                 toast.success(`${t('PopUpAlerts.modal.removeChannel')}`, {
                   icon: '👌',
                 });
-              })
-            }
+              });
+            }}
           >
             {t('Modals.removeModal.remove')}
           </Button>

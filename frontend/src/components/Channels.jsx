@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
@@ -82,9 +83,12 @@ const Channels = () => {
         </button>
       </div>
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-        {channels.map((channel) =>
-          channel.removable === false ? addDefaultChannels(channel) : addNewChannels(channel),
-        )}
+        {channels.map((channel) => {
+          if (channel.removable === false) {
+            return addDefaultChannels(channel);
+          }
+          return addNewChannels(channel);
+        })}
       </ul>
     </div>
   );

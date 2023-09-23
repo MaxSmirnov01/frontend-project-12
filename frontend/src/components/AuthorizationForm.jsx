@@ -101,7 +101,7 @@ const AuthorizationForm = () => {
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>{t('AuthorizationForm.noAccount')} </span>
+                <span>{t('AuthorizationForm.noAccount')}</span>
                 <Link to={routes.signupPath()}>{t('AuthorizationForm.signUp')}</Link>
               </div>
             </Card.Footer>

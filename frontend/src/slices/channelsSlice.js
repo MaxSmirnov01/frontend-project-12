@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
@@ -36,5 +37,6 @@ export const selectChannelNames = createSelector(selectChannels, ({ channels }) 
   const names = channels.map((channel) => channel.name);
   return names;
 });
+// eslint-disable-next-line object-curly-newline
 export const { addChannelState, setCurrentChannel, addChannel, removeChannel, renameChannel } = channelsSlice.actions;
 export default channelsSlice.reducer;

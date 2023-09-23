@@ -5,7 +5,7 @@ const en = {
       username: 'Username',
       password: 'Password',
       buttonLogIn: 'Log In',
-      noAccount: 'No account?',
+      noAccount: 'No account? ',
       signUp: 'Sign Up',
     },
     Signup: {
