@@ -12,6 +12,7 @@
     "axios": "^1.5.0",
     "bootstrap": "^5.3.1",
     "classnames": "^2.3.2",
+    "emoji-picker-react": "^4.5.2",
     "formik": "^2.4.3",
     "i18next": "^23.4.6",
     "leo-profanity": "^1.7.0",

@@ -3,12 +3,14 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import EmojiPicker from 'emoji-picker-react';
 import cn from 'classnames';
 import useSocket from '../hooks/useSocket';
 import filterProfanity from '../filter';
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const { username } = JSON.parse(localStorage.getItem('user'));
   const input = useRef(null);
@@ -75,8 +77,19 @@ const Messages = () => {
           ))}
         </div>
         <div className="mt-auto px-5 py-3">
+          {showEmojiPicker && (
+            <EmojiPicker
+              onEmojiClick={({ emoji }) => {
+                formik.setFieldValue('body', `${formik.values.body} ${emoji}`);
+                setShowEmojiPicker(!showEmojiPicker);
+              }}
+            />
+          )}
           <Form noValidate className="py-0 border rounded-2" onSubmit={formik.handleSubmit}>
             <InputGroup className={cn({ 'has-validation': isButtonDisabled })}>
+              <Button type="button" variant="outline-light" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                🙂
+              </Button>
               <Form.Control
                 name="body"
                 aria-label="Новое сообщение"
