@@ -63,7 +63,7 @@ const Channels = () => {
           variant={currentChannelId === channel.id ? 'secondary' : null}
           className="flex-grow-0"
         >
-          <span className="visually-hidden">Управление каналом</span>
+          <span className="visually-hidden">{t('Channels.channelControl')}</span>
           <Dropdown.Item onClick={() => handleRemoveChannel(channel.id)}>{t('Channels.removeChannel')}</Dropdown.Item>
           <Dropdown.Item onClick={() => handleRenameChannel(channel.id)}>{t('Channels.renameChannel')}</Dropdown.Item>
         </DropdownButton>

@@ -74,7 +74,7 @@ const AddModal = () => {
               isInvalid={!!formik.errors.name}
             />
             <Form.Label className="visually-hidden" htmlFor="name">
-              Имя канала
+              {t('Modals.addModal.channelName')}
             </Form.Label>
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
             <div className="d-flex justify-content-end">
@@ -141,6 +141,10 @@ const RenameModal = () => {
   useEffect(() => input.current.select(), []);
 
   const { modalIsOpen, channelId } = useSelector((state) => state.modal);
+  const currentChannel = useSelector((state) => {
+    const { channels } = state.channels;
+    return channels.find((channel) => channel.id === channelId);
+  });
   const channelNames = useSelector(selectChannelNames);
 
   const handleClose = () => dispatch(hideModal({ type: 'rename', modalIsOpen: false, channelId }));
@@ -154,7 +158,7 @@ const RenameModal = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: currentChannel.name,
     },
     validationSchema: schema,
     onSubmit: ({ name }) => {
@@ -194,7 +198,7 @@ const RenameModal = () => {
               isInvalid={!!formik.errors.name}
             />
             <Form.Label className="visually-hidden" htmlFor="name">
-              Имя канала
+              {t('Modals.renameModal.channelName')}
             </Form.Label>
             <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>
             <div className="d-flex justify-content-end">

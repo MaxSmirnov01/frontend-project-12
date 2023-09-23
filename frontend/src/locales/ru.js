@@ -28,9 +28,10 @@ const ru = {
       lang: 'Язык',
     },
     Channels: {
-      channels: '  Каналы',
+      channels: 'Каналы',
       removeChannel: 'Удалить',
       renameChannel: 'Переименовать',
+      channelControl: 'Управление каналом',
     },
     Messages: {
       count_zero: '{{count}} сообщений',
@@ -45,6 +46,7 @@ const ru = {
         addChannel: 'Добавить канал',
         cancel: 'Отменить',
         submit: 'Отправить',
+        channelName: 'Имя канала',
       },
       removeModal: {
         removeChannel: 'Удалить канал',
@@ -56,6 +58,7 @@ const ru = {
         renameChannel: 'Переименовать канал',
         cancel: 'Отменить',
         submit: 'Отправить',
+        channelName: 'Имя канала',
       },
     },
     ValidationErrors: {

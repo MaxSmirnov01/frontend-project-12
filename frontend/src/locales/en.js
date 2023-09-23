@@ -31,6 +31,7 @@ const en = {
       channels: 'Channels',
       removeChannel: 'Remove',
       renameChannel: 'Rename',
+      channelControl: 'Channel control',
     },
     Messages: {
       count_one: '{{count}} message',
@@ -43,6 +44,7 @@ const en = {
         addChannel: 'Add channel',
         cancel: 'Cancel',
         submit: 'Submit',
+        channelName: 'Channel name',
       },
       removeModal: {
         removeChannel: 'Remove channel',
@@ -54,6 +56,7 @@ const en = {
         renameChannel: 'Rename channel',
         cancel: 'Cancel',
         submit: 'Submit',
+        channelName: 'Channel name',
       },
     },
     ValidationErrors: {
