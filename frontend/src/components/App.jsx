@@ -45,9 +45,15 @@ const PrivateRoute = (props) => {
   return <Navigate to={routes.loginPath()} />;
 };
 
+// const TestError = () => {
+//   const a = null;
+//   return a.hello();
+// };
+
 const App = () => (
   <Provider config={rollbarConfig}>
     <ErrorBoundary>
+      {/* <TestError /> */}
       <div className="d-flex flex-column h-100">
         <AuthProvider>
           <Router>
