@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';
@@ -9,6 +8,9 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import routes from '../routes';
 import useAuth from '../hooks/useAuth';
+import useLocalStorage from '../hooks/useLocalStorage';
+import avatar2 from '../assets/images/avatar2.jpg';
+import requests from '../requests.js';
 
 const Signup = () => {
   const [regFailed, setRegFailed] = useState(false);
@@ -16,6 +18,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const auth = useAuth();
   const { t } = useTranslation();
+  const setItem = useLocalStorage('setItem');
 
   useEffect(() => input.current.focus(), []);
 
@@ -45,9 +48,9 @@ const Signup = () => {
       formik.setSubmitting(true);
       setRegFailed(false);
       try {
-        const response = await axios.post('/api/v1/signup', { username, password });
+        const response = await axios.post(requests.signUp(), { username, password });
         const user = response.data;
-        localStorage.setItem('user', JSON.stringify(user));
+        setItem(user);
         auth.logIn();
         navigate(routes.mainPath());
       } catch (error) {
@@ -72,14 +75,14 @@ const Signup = () => {
           <Card className="shadow-sm">
             <Card.Body className="d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <div>
-                <img src="images/avatar_1.jpg" className="rounded-circle" alt="Регистрация" />
+                <img src={avatar2} className="rounded-circle" alt="Регистрация" />
               </div>
               <Form onSubmit={formik.handleSubmit} className="w-50">
                 <h1 className="text-center mb-4">{t('Signup.signUp')}</h1>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="username"
-                    placeholder="Имя пользователя"
+                    placeholder={t('Signup.username')}
                     name="username"
                     required
                     id="username"
@@ -98,7 +101,7 @@ const Signup = () => {
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="password"
-                    placeholder="Пароль"
+                    placeholder={t('Signup.password')}
                     name="password"
                     required
                     id="password"
@@ -116,7 +119,7 @@ const Signup = () => {
                 <Form.Floating className="mb-4">
                   <Form.Control
                     type="password"
-                    placeholder="Подтвердите пароль"
+                    placeholder={t('Signup.confirmPassword')}
                     name="confirmPassword"
                     required
                     id="confirmPassword"

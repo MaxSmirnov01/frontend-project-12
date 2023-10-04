@@ -8,6 +8,9 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import routes from '../routes';
+import useLocalStorage from '../hooks/useLocalStorage';
+import requests from '../requests.js';
+import avatar1 from '../assets/images/avatar1.jpg';
 
 const schema = Yup.object().shape({
   username: Yup.string().required(),
@@ -20,6 +23,7 @@ const AuthorizationForm = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const setItem = useLocalStorage('setItem');
 
   useEffect(() => input.current.focus(), []);
 
@@ -33,9 +37,9 @@ const AuthorizationForm = () => {
       formik.setSubmitting(true);
       setAuthFailed(false);
       try {
-        const response = await axios.post('/api/v1/login', { username, password });
+        const response = await axios.post(requests.login(), { username, password });
         const user = response.data;
-        localStorage.setItem('user', JSON.stringify(user));
+        setItem(user);
         auth.logIn();
         navigate(routes.mainPath());
       } catch (error) {
@@ -59,14 +63,14 @@ const AuthorizationForm = () => {
           <Card className="shadow-sm">
             <Card.Body className="row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                <img src="images/avatar.jpg" className="rounded-circle" alt="Войти" />
+                <img src={avatar1} className="rounded-circle" alt="Войти" />
               </div>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                 <h1 className="text-center mb-4">{t('AuthorizationForm.logIn')}</h1>
                 <Form.Floating className="mb-3">
                   <Form.Control
                     type="username"
-                    placeholder="Ваш ник"
+                    placeholder={t('AuthorizationForm.username')}
                     required
                     autoComplete="username"
                     id="username"

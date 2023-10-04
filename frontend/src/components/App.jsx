@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-// eslint-disable-next-line object-curly-newline
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider, ErrorBoundary } from '@rollbar/react';
 import { ToastContainer } from 'react-toastify';
@@ -11,32 +10,37 @@ import MainPage from './MainPage';
 import NotFound from './NotFound';
 import Signup from './Signup';
 import { AuthContext } from '../contexts';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const rollbarConfig = {
-  accessToken: '1bafa433419248e9b8b0247d327f9683',
+  accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
   environment: 'production',
 };
 
 const AuthProvider = ({ children }) => {
-  const user = localStorage.getItem('user');
+  const user = useLocalStorage('getItem');
+  const remove = useLocalStorage('removeItem');
   const [loggedIn, setLoggedIn] = useState(!!user);
 
   const logIn = () => setLoggedIn(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const logOut = () => {
-    localStorage.removeItem('user');
+    remove();
     setLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn])}>
+    <AuthContext.Provider value={useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn, logOut])}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-const PrivateRoute = () => {
-  if (localStorage.getItem('user')) {
-    return <MainPage />;
+const PrivateRoute = (props) => {
+  const user = useLocalStorage('getItem');
+  const { children } = props;
+  if (user) {
+    return children;
   }
   return <Navigate to={routes.loginPath()} />;
 };
@@ -49,7 +53,14 @@ const App = () => (
           <Router>
             <NavbarComponent />
             <Routes>
-              <Route path={routes.mainPath()} element={<PrivateRoute />} />
+              <Route
+                path={routes.mainPath()}
+                element={
+                  <PrivateRoute>
+                    <MainPage />
+                  </PrivateRoute>
+                }
+              />
               <Route path={routes.loginPath()} element={<AuthorizationForm />} />
               <Route path={routes.notFoundPath()} element={<NotFound />} />
               <Route path={routes.signupPath()} element={<Signup />} />
