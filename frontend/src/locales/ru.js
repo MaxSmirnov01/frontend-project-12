@@ -67,6 +67,7 @@ const ru = {
         password: 'Не менее 6 символов',
         confirmPassword: 'Пароли должны совпадать',
         required: 'Обязательное поле',
+        regFailed: 'Такой пользователь уже существует',
       },
       authorizationForm: {
         error: 'Неверные имя пользователя или пароль',

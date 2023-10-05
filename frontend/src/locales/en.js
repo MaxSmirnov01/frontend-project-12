@@ -65,6 +65,7 @@ const en = {
         password: 'Minimum 6 characters',
         confirmPassword: "Passwords don't match",
         required: 'Required field',
+        regFailed: 'This user already exists',
       },
       authorizationForm: {
         error: 'Invalid username or password',

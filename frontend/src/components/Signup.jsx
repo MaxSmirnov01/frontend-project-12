@@ -131,7 +131,7 @@ const Signup = () => {
                   />
                   <Form.Label htmlFor="confirmPassword">{t('Signup.confirmPassword')}</Form.Label>
                   <Form.Control.Feedback type="invalid" tooltip>
-                    {regFailed === false ? formik.errors.confirmPassword : 'Такой пользователь уже существует'}
+                    {regFailed === false ? formik.errors.confirmPassword : t('ValidationErrors.signUp.regFailed')}
                   </Form.Control.Feedback>
                 </Form.Floating>
                 <Button type="submit" className="w-100" variant="outline-primary">

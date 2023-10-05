@@ -1,5 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import routes from '../routes.js';
+import getData from '../api/getData.js';
 
 export const defaultChannel = 1;
 
@@ -7,11 +12,6 @@ const channelsSlice = createSlice({
   name: 'channels',
   initialState: { channels: [], currentChannelId: defaultChannel },
   reducers: {
-    addChannelState: (state, { payload }) => {
-      const { channels, currentChannelId } = payload;
-      state.channels = channels;
-      state.currentChannelId = currentChannelId;
-    },
     setCurrentChannel: (state, { payload }) => {
       const { currentChannelId } = payload;
       state.currentChannelId = currentChannelId;
@@ -28,6 +28,26 @@ const channelsSlice = createSlice({
       channel.name = payload.name;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getData.fulfilled, (state, { payload }) => {
+        const { channels, currentChannelId } = payload;
+        state.channels = channels;
+        state.currentChannelId = currentChannelId;
+      })
+      .addCase(getData.rejected, ({ error }) => {
+        console.log(error);
+        const { t } = useTranslation();
+        const navigate = useNavigate();
+        if (error === 401) {
+          navigate(routes.loginPath());
+          return;
+        }
+        toast.error(`${t('PopUpAlerts.mainPage')}`, {
+          icon: '😿',
+        });
+      });
+  },
 });
 
 const selectChannels = (state) => state.channels;
@@ -37,5 +57,5 @@ export const selectChannelNames = createSelector(selectChannels, ({ channels }) 
   return names;
 });
 
-export const { addChannelState, setCurrentChannel, addChannel, removeChannel, renameChannel } = channelsSlice.actions;
+export const { setCurrentChannel, addChannel, removeChannel, renameChannel } = channelsSlice.actions;
 export default channelsSlice.reducer;

@@ -15,7 +15,8 @@ const Messages = () => {
 
   const { username } = JSON.parse(useLocalStorage('getItem'));
   const input = useRef(null);
-  const socket = useSocket();
+  const emojiContainerRef = useRef(null);
+  const api = useSocket();
   const { t } = useTranslation();
 
   const messages = useSelector((state) => state.messages.messages);
@@ -28,20 +29,16 @@ const Messages = () => {
 
   const messagesFilteredById = messages.filter((message) => message.channelId === channelId);
 
-  useEffect(() => input.current.focus());
-
   const formik = useFormik({
     initialValues: {
       body: '',
     },
-    onSubmit: ({ body }) => {
+    onSubmit: async ({ body }) => {
       formik.setSubmitting(true);
       const message = filterProfanity(body);
 
       try {
-        socket.emit('newMessage', { body: message, channelId, username }, (response) => {
-          console.log(response.status, 'сообщение добавлено');
-        });
+        await api.sendMessage({ body: message, channelId, username });
         formik.resetForm();
         setIsButtonDisabled(true);
       } catch (error) {
@@ -51,14 +48,22 @@ const Messages = () => {
     },
   });
 
-  const handleCustomChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      setIsButtonDisabled(false);
-    } else {
-      setIsButtonDisabled(true);
+  const handleClickOutside = (e) => {
+    if (emojiContainerRef.current && !emojiContainerRef.current.contains(e.target)) {
+      setShowEmojiPicker(false);
     }
   };
+
+  useEffect(() => input.current.focus(), [channelId, formik.isSubmitting, showEmojiPicker]);
+  useEffect(() => {
+    // Добавляем обработчик события клика при монтировании компонента
+    document.addEventListener('click', handleClickOutside);
+
+    // Удаляем обработчик события клика при размонтировании компонента
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="col p-0 h-100">
@@ -81,12 +86,12 @@ const Messages = () => {
           {showEmojiPicker && (
             <EmojiPicker
               onEmojiClick={({ emoji }) => {
-                formik.setFieldValue('body', `${formik.values.body} ${emoji}`);
+                formik.setFieldValue('body', `${formik.values.body} ${emoji} `);
                 setShowEmojiPicker(!showEmojiPicker);
               }}
             />
           )}
-          <Form noValidate className="py-0 border rounded-2" onSubmit={formik.handleSubmit}>
+          <Form noValidate className="py-0 border rounded-2" onSubmit={formik.handleSubmit} ref={emojiContainerRef}>
             <InputGroup className={cn({ 'has-validation': isButtonDisabled })}>
               <Button type="button" variant="outline-light" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                 🙂
@@ -97,17 +102,14 @@ const Messages = () => {
                 placeholder={t('Messages.enterMessage')}
                 className="border-0 p-2 ps-2"
                 ref={input}
-                onChange={(e) => {
-                  formik.handleChange(e);
-                  handleCustomChange(e);
-                }}
+                onChange={formik.handleChange}
                 value={formik.values.body}
               />
               <Button
                 type="submit"
                 className="btn-group-vertical"
                 variant="outline-primary"
-                disabled={isButtonDisabled}
+                disabled={!formik.values.body.length}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                   <path fillRule="evenodd" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
