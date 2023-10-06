@@ -7,7 +7,9 @@ import store from './slices/store.js';
 import App from './components/App';
 import resources from './locales/index.js';
 import { SocketContext } from './contexts/index.jsx';
-import { addChannel, removeChannel, renameChannel, setCurrentChannel, defaultChannel } from './slices/channelsSlice.js';
+import {
+  addChannel, removeChannel, renameChannel, setCurrentChannel, defaultChannel,
+} from './slices/channelsSlice.js';
 import { addMessage } from './slices/messagesSlice.js';
 
 const init = async (socket) => {

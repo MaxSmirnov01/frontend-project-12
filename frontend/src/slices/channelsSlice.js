@@ -57,5 +57,7 @@ export const selectChannelNames = createSelector(selectChannels, ({ channels }) 
   return names;
 });
 
-export const { setCurrentChannel, addChannel, removeChannel, renameChannel } = channelsSlice.actions;
+export const {
+  setCurrentChannel, addChannel, removeChannel, renameChannel,
+} = channelsSlice.actions;
 export default channelsSlice.reducer;

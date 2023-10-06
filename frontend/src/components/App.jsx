@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Routes, Route, Navigate,
+} from 'react-router-dom';
 import { Provider, ErrorBoundary } from '@rollbar/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -55,11 +57,11 @@ const App = () => (
             <Routes>
               <Route
                 path={routes.mainPath()}
-                element={
+                element={(
                   <PrivateRoute>
                     <MainPage />
                   </PrivateRoute>
-                }
+                )}
               />
               <Route path={routes.loginPath()} element={<AuthorizationForm />} />
               <Route path={routes.notFoundPath()} element={<NotFound />} />

@@ -3,7 +3,9 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const NewChannels = (props) => {
-  const { channel, currentChannelId, handleSelectChannel, handleRemoveChannel, handleRenameChannel } = props;
+  const {
+    channel, currentChannelId, handleSelectChannel, handleRemoveChannel, handleRenameChannel,
+  } = props;
   const { t } = useTranslation();
 
   return (

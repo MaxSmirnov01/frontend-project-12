@@ -1,5 +1,7 @@
 import React from 'react';
-import { Navbar, Container, Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import {
+  Navbar, Container, Button, Dropdown, DropdownButton,
+} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';

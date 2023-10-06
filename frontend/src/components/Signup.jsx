@@ -127,7 +127,8 @@ const Signup = () => {
                     value={formik.values.confirmPassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    isInvalid={(formik.touched.confirmPassword && formik.errors.confirmPassword) || regFailed}
+                    isInvalid={(formik.touched.confirmPassword && formik.errors.confirmPassword)
+                      || regFailed}
                   />
                   <Form.Label htmlFor="confirmPassword">{t('Signup.confirmPassword')}</Form.Label>
                   <Form.Control.Feedback type="invalid" tooltip>
