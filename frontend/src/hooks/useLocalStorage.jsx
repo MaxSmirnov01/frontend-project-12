@@ -7,7 +7,7 @@ const useLocalStorage = (action) => {
     case 'setItem':
       return (user) => localStorage.setItem('user', JSON.stringify(user));
     default:
-      throw new Error('Некорректное действие', action);
+      return new Error('Некорректное действие', action);
   }
 };
 
