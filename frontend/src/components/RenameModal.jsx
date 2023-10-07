@@ -5,7 +5,7 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import { hideModal } from '../slices/modalSlice';
+import { manageModal } from '../slices/modalSlice';
 import { selectChannelNames } from '../slices/channelsSlice';
 import useSocket from '../hooks/useSocket';
 import filterProfanity from '../filter';
@@ -25,7 +25,7 @@ const RenameModal = () => {
   });
   const channelNames = useSelector(selectChannelNames);
 
-  const handleClose = () => dispatch(hideModal({ type: 'rename', modalIsOpen: false, channelId }));
+  const handleClose = () => dispatch(manageModal({ type: 'rename', modalIsOpen: false, channelId }));
 
   const schema = Yup.object().shape({
     name: Yup.string()

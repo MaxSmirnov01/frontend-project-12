@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setCurrentChannel } from '../slices/channelsSlice';
-import { showModal } from '../slices/modalSlice';
-import DefaultChannels from './DefaultChannels';
-import NewChannels from './NewChannels';
+import { manageModal } from '../slices/modalSlice';
+import DefaultChannel from './DefaultChannel';
+import NewChannel from './NewChannel';
 
 const Channels = () => {
   const dispatch = useDispatch();
@@ -17,15 +17,15 @@ const Channels = () => {
   };
 
   const handleAddChannel = () => {
-    dispatch(showModal({ type: 'add', modalIsOpen: true, channelId: null }));
+    dispatch(manageModal({ type: 'add', modalIsOpen: true, channelId: null }));
   };
 
   const handleRemoveChannel = (id) => {
-    dispatch(showModal({ type: 'remove', modalIsOpen: true, channelId: id }));
+    dispatch(manageModal({ type: 'remove', modalIsOpen: true, channelId: id }));
   };
 
   const handleRenameChannel = (id) => {
-    dispatch(showModal({ type: 'rename', modalIsOpen: true, channelId: id }));
+    dispatch(manageModal({ type: 'rename', modalIsOpen: true, channelId: id }));
   };
 
   return (
@@ -44,7 +44,7 @@ const Channels = () => {
         {channels.map((channel) => {
           if (channel.removable === false) {
             return (
-              <DefaultChannels
+              <DefaultChannel
                 key={channel.id}
                 channel={channel}
                 currentChannelId={currentChannelId}
@@ -53,7 +53,7 @@ const Channels = () => {
             );
           }
           return (
-            <NewChannels
+            <NewChannel
               key={channel.id}
               channel={channel}
               currentChannelId={currentChannelId}

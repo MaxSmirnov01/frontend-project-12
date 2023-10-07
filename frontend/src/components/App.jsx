@@ -13,6 +13,7 @@ import NotFound from './NotFound';
 import Signup from './Signup';
 import { AuthContext } from '../contexts';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useAuth from '../hooks/useAuth';
 
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN,
@@ -20,28 +21,30 @@ const rollbarConfig = {
 };
 
 const AuthProvider = ({ children }) => {
-  const user = useLocalStorage('getItem');
+  const user = JSON.parse(useLocalStorage('getItem'));
   const remove = useLocalStorage('removeItem');
   const [loggedIn, setLoggedIn] = useState(!!user);
 
-  const logIn = () => setLoggedIn(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const logOut = () => {
-    remove();
-    setLoggedIn(false);
-  };
+  const authValue = useMemo(() => ({
+    loggedIn,
+    logIn: () => setLoggedIn(true),
+    logOut: () => {
+      remove();
+      setLoggedIn(false);
+    },
+  }), [loggedIn, remove]);
 
   return (
-    <AuthContext.Provider value={useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn, logOut])}>
+    <AuthContext.Provider value={authValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 const PrivateRoute = (props) => {
-  const user = useLocalStorage('getItem');
+  const auth = useAuth();
   const { children } = props;
-  if (user) {
+  if (auth.loggedIn) {
     return children;
   }
   return <Navigate to={routes.loginPath()} />;

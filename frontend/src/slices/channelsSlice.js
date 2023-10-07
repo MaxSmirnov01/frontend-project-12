@@ -1,9 +1,5 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import routes from '../routes.js';
 import getData from '../api/getData.js';
 
 export const defaultChannel = 1;
@@ -37,15 +33,6 @@ const channelsSlice = createSlice({
       })
       .addCase(getData.rejected, ({ error }) => {
         console.log(error);
-        const { t } = useTranslation();
-        const navigate = useNavigate();
-        if (error === 401) {
-          navigate(routes.loginPath());
-          return;
-        }
-        toast.error(`${t('PopUpAlerts.mainPage')}`, {
-          icon: '😿',
-        });
       });
   },
 });

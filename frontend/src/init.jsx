@@ -11,6 +11,7 @@ import {
   addChannel, removeChannel, renameChannel, setCurrentChannel, defaultChannel,
 } from './slices/channelsSlice.js';
 import { addMessage } from './slices/messagesSlice.js';
+import useLocalStorage from './hooks/useLocalStorage.jsx';
 
 const init = async (socket) => {
   const i18n = i18next.createInstance();
@@ -30,9 +31,8 @@ const init = async (socket) => {
       }),
     addChannel: (...arg) =>
       socket.emit('newChannel', ...arg, (response) => {
-        const { data, status } = response;
+        const { status } = response;
         console.log(status, 'канал добавлен');
-        store.dispatch(setCurrentChannel({ currentChannelId: data.id }));
       }),
 
     removeChannel: (...arg) =>
@@ -51,6 +51,10 @@ const init = async (socket) => {
   });
   socket.on('newChannel', (payload) => {
     store.dispatch(addChannel(payload));
+    const { username } = JSON.parse(useLocalStorage('getItem'));
+    if (username === payload.username) {
+      store.dispatch(setCurrentChannel({ currentChannelId: payload.id }));
+    }
   });
   socket.on('newMessage', (message) => {
     store.dispatch(addMessage(message));

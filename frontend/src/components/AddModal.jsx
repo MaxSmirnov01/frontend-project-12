@@ -5,23 +5,25 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import { hideModal } from '../slices/modalSlice';
+import { manageModal } from '../slices/modalSlice';
 import { selectChannelNames } from '../slices/channelsSlice';
 import useSocket from '../hooks/useSocket';
 import filterProfanity from '../filter';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const AddModal = () => {
   const dispatch = useDispatch();
   const input = useRef(null);
   const api = useSocket();
   const { t } = useTranslation();
+  const { username } = JSON.parse(useLocalStorage('getItem'));
 
   const modalIsOpen = useSelector((state) => state.modal.modalIsOpen);
   const channelNames = useSelector(selectChannelNames);
 
   useEffect(() => input.current.focus(), []);
 
-  const handleClose = () => dispatch(hideModal({ type: 'add', modalIsOpen: false, channelId: null }));
+  const handleClose = () => dispatch(manageModal({ type: 'add', modalIsOpen: false, channelId: null }));
 
   const schema = Yup.object().shape({
     name: Yup.string()
@@ -40,7 +42,7 @@ const AddModal = () => {
       const newChannel = filterProfanity(name);
 
       try {
-        await api.addChannel({ name: newChannel });
+        await api.addChannel({ name: newChannel, username });
         handleClose();
         toast.success(`${t('PopUpAlerts.modal.addChannel')}`, {
           icon: '👌',
