@@ -9,14 +9,14 @@ import { manageModal } from '../slices/modalSlice';
 import { selectChannelNames } from '../slices/channelsSlice';
 import useSocket from '../hooks/useSocket';
 import filterProfanity from '../filter';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useAuth from '../hooks/useAuth';
 
 const AddModal = () => {
   const dispatch = useDispatch();
   const input = useRef(null);
   const api = useSocket();
   const { t } = useTranslation();
-  const { username } = JSON.parse(useLocalStorage('getItem'));
+  const { username } = useAuth();
 
   const modalIsOpen = useSelector((state) => state.modal.modalIsOpen);
   const channelNames = useSelector(selectChannelNames);

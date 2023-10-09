@@ -51,7 +51,7 @@ const Signup = () => {
         const response = await axios.post(requests.signUp(), { username, password });
         const user = response.data;
         setItem(user);
-        auth.logIn();
+        auth.logIn(user.username);
         navigate(routes.mainPath());
       } catch (error) {
         formik.setSubmitting(false);

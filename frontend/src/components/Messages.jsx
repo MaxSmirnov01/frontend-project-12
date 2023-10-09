@@ -7,17 +7,17 @@ import EmojiPicker from 'emoji-picker-react';
 import cn from 'classnames';
 import useSocket from '../hooks/useSocket';
 import filterProfanity from '../filter';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useAuth from '../hooks/useAuth';
 
 const Messages = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const { username } = JSON.parse(useLocalStorage('getItem'));
   const input = useRef(null);
   const emojiContainerRef = useRef(null);
   const api = useSocket();
   const { t } = useTranslation();
+  const { username } = useAuth();
 
   const messages = useSelector((state) => state.messages.messages);
   const channelId = useSelector((state) => state.channels.currentChannelId);

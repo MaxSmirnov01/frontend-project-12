@@ -24,15 +24,21 @@ const AuthProvider = ({ children }) => {
   const user = JSON.parse(useLocalStorage('getItem'));
   const remove = useLocalStorage('removeItem');
   const [loggedIn, setLoggedIn] = useState(!!user);
+  const [username, setUserName] = useState(user ? user.username : null);
 
   const authValue = useMemo(() => ({
     loggedIn,
-    logIn: () => setLoggedIn(true),
+    logIn: (name) => {
+      setLoggedIn(true);
+      setUserName(name);
+    },
     logOut: () => {
       remove();
       setLoggedIn(false);
+      setUserName(null);
     },
-  }), [loggedIn, remove]);
+    username,
+  }), [loggedIn, remove, username]);
 
   return (
     <AuthContext.Provider value={authValue}>
