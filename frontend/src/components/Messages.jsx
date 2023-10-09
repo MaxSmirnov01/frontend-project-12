@@ -15,6 +15,7 @@ const Messages = () => {
 
   const input = useRef(null);
   const emojiContainerRef = useRef(null);
+  const chatRef = useRef(null);
   const api = useSocket();
   const { t } = useTranslation();
   const { username } = useAuth();
@@ -56,6 +57,9 @@ const Messages = () => {
 
   useEffect(() => input.current.focus(), [channelId, formik.isSubmitting, showEmojiPicker]);
   useEffect(() => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [messagesFilteredById]);
+  useEffect(() => {
     // Добавляем обработчик события клика при монтировании компонента
     document.addEventListener('click', handleClickOutside);
 
@@ -74,7 +78,7 @@ const Messages = () => {
           </p>
           <span className="text-muted">{t('Messages.count', { count: messagesFilteredById.length })}</span>
         </div>
-        <div id="messages-box" className="chat-messages overflow-auto px-5">
+        <div ref={chatRef} id="messages-box" className="chat-messages overflow-auto px-5">
           {messagesFilteredById.map((message) => (
             <div key={message.id} className="text-break mb-2">
               <b>{message.username}</b>
