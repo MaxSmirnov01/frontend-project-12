@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import EmojiPicker from 'emoji-picker-react';
 import cn from 'classnames';
+import leoProfanity from 'leo-profanity';
 import useSocket from '../hooks/useSocket';
-import filterProfanity from '../filter';
 import useAuth from '../hooks/useAuth';
 
 const Messages = () => {
@@ -19,6 +19,8 @@ const Messages = () => {
   const api = useSocket();
   const { t } = useTranslation();
   const { username } = useAuth();
+
+  const filter = leoProfanity;
 
   const messages = useSelector((state) => state.messages.messages);
   const channelId = useSelector((state) => state.channels.currentChannelId);
@@ -36,7 +38,7 @@ const Messages = () => {
     },
     onSubmit: async ({ body }) => {
       formik.setSubmitting(true);
-      const message = filterProfanity(body);
+      const message = filter.clean(body);
 
       try {
         await api.sendMessage({ body: message, channelId, username });

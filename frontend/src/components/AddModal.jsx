@@ -5,10 +5,10 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import { manageModal } from '../slices/modalSlice';
+import leoProfanity from 'leo-profanity';
+import { hideModal } from '../slices/modalSlice';
 import { selectChannelNames } from '../slices/channelsSlice';
 import useSocket from '../hooks/useSocket';
-import filterProfanity from '../filter';
 import useAuth from '../hooks/useAuth';
 
 const AddModal = () => {
@@ -18,12 +18,14 @@ const AddModal = () => {
   const { t } = useTranslation();
   const { username } = useAuth();
 
+  const filter = leoProfanity;
+
   const modalIsOpen = useSelector((state) => state.modal.modalIsOpen);
   const channelNames = useSelector(selectChannelNames);
 
   useEffect(() => input.current.focus(), []);
 
-  const handleClose = () => dispatch(manageModal({ type: 'add', modalIsOpen: false, channelId: null }));
+  const handleClose = () => dispatch(hideModal({ type: 'add', channelId: null }));
 
   const schema = Yup.object().shape({
     name: Yup.string()
@@ -39,7 +41,7 @@ const AddModal = () => {
     validationSchema: schema,
     onSubmit: async ({ name }) => {
       formik.setSubmitting(true);
-      const newChannel = filterProfanity(name);
+      const newChannel = filter.clean(name);
 
       try {
         await api.addChannel({ name: newChannel, username });

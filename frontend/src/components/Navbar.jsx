@@ -2,19 +2,17 @@ import React from 'react';
 import {
   Navbar, Container, Button, Dropdown, DropdownButton,
 } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import useAuth from '../hooks/useAuth';
 
 const NavbarComponent = () => {
   const auth = useAuth();
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
   const handleAuthButton = () => {
     auth.logOut();
-    navigate(routes.loginPath());
   };
 
   const handleLangSwitch = (e) => {

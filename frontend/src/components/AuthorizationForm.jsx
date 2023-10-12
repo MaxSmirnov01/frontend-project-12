@@ -63,7 +63,7 @@ const AuthorizationForm = () => {
           <Card className="shadow-sm">
             <Card.Body className="row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                <img src={avatar1} className="rounded-circle" alt="Войти" />
+                <img src={avatar1} className="rounded-circle" alt={t('AuthorizationForm.logIn')} />
               </div>
               <Form onSubmit={formik.handleSubmit} className="col-12 col-md-6 mt-3 mt-mb-0">
                 <h1 className="text-center mb-4">{t('AuthorizationForm.logIn')}</h1>

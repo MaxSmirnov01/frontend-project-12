@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { manageModal } from '../slices/modalSlice';
+import { hideModal } from '../slices/modalSlice';
 import useSocket from '../hooks/useSocket';
 
 const RemoveModal = () => {
@@ -13,7 +13,7 @@ const RemoveModal = () => {
 
   const { modalIsOpen, channelId } = useSelector((state) => state.modal);
 
-  const handleClose = () => dispatch(manageModal({ type: 'remove', modalIsOpen: false, channelId }));
+  const handleClose = () => dispatch(hideModal({ type: 'remove', channelId }));
 
   return (
     <Modal show={modalIsOpen} centered onHide={handleClose}>

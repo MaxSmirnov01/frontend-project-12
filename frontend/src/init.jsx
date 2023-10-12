@@ -3,17 +3,14 @@ import React from 'react';
 import i18next from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
+import leoProfanity from 'leo-profanity';
 import store from './slices/store.js';
 import App from './components/App';
 import resources from './locales/index.js';
 import { SocketContext } from './contexts/index.jsx';
-import {
-  addChannel, removeChannel, renameChannel, setCurrentChannel, defaultChannel,
-} from './slices/channelsSlice.js';
-import { addMessage } from './slices/messagesSlice.js';
-import useLocalStorage from './hooks/useLocalStorage.jsx';
+import socket from './socket.js';
 
-const init = async (socket) => {
+const init = async () => {
   const i18n = i18next.createInstance();
 
   await i18n.use(initReactI18next).init({
@@ -24,51 +21,31 @@ const init = async (socket) => {
     },
   });
 
+  const filter = leoProfanity;
+  filter.add(filter.getDictionary('ru'));
+  filter.add(filter.getDictionary('en'));
+
   const api = {
     sendMessage: (...arg) =>
       socket.emit('newMessage', ...arg, (response) => {
-        console.log(response.status, 'сообщение добавлено');
+        console.log(response.status, 'message added');
       }),
     addChannel: (...arg) =>
       socket.emit('newChannel', ...arg, (response) => {
         const { status } = response;
-        console.log(status, 'канал добавлен');
+        console.log(status, 'channel added');
       }),
 
     removeChannel: (...arg) =>
       socket.emit('removeChannel', ...arg, (response) => {
-        console.log(response.status, 'канал удален');
+        console.log(response.status, 'channel removed');
       }),
 
     renameChannel: (...arg) =>
       socket.emit('renameChannel', ...arg, (response) => {
-        console.log(response.status, 'канал переименован');
+        console.log(response.status, 'channel renamed');
       }),
   };
-
-  socket.on('connect', () => {
-    console.log('Подключено к серверу');
-  });
-  socket.on('newChannel', (payload) => {
-    store.dispatch(addChannel(payload));
-    const { username } = JSON.parse(useLocalStorage('getItem'));
-    if (username === payload.username) {
-      store.dispatch(setCurrentChannel({ currentChannelId: payload.id }));
-    }
-  });
-  socket.on('newMessage', (message) => {
-    store.dispatch(addMessage(message));
-  });
-  socket.on('removeChannel', (payload) => {
-    store.dispatch(removeChannel(payload));
-    const state = store.getState();
-    if (state.channels.currentChannelId === payload.id) {
-      store.dispatch(setCurrentChannel({ currentChannelId: defaultChannel }));
-    }
-  });
-  socket.on('renameChannel', (payload) => {
-    store.dispatch(renameChannel(payload));
-  });
 
   return (
     <Provider store={store}>

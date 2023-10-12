@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setCurrentChannel } from '../slices/channelsSlice';
-import { manageModal } from '../slices/modalSlice';
+import { showModal } from '../slices/modalSlice';
 import DefaultChannel from './DefaultChannel';
 import NewChannel from './NewChannel';
 
@@ -17,15 +17,15 @@ const Channels = () => {
   };
 
   const handleAddChannel = () => {
-    dispatch(manageModal({ type: 'add', modalIsOpen: true, channelId: null }));
+    dispatch(showModal({ type: 'add', channelId: null }));
   };
 
   const handleRemoveChannel = (id) => {
-    dispatch(manageModal({ type: 'remove', modalIsOpen: true, channelId: id }));
+    dispatch(showModal({ type: 'remove', channelId: id }));
   };
 
   const handleRenameChannel = (id) => {
-    dispatch(manageModal({ type: 'rename', modalIsOpen: true, channelId: id }));
+    dispatch(showModal({ type: 'rename', channelId: id }));
   };
 
   return (
